@@ -467,7 +467,7 @@ function App() {
                   </dl>
                 </Card>
                 <Card className="panel bracket-panel">
-                  <Collapsible className="bracket-collapsible">
+                  <Collapsible className="bracket-collapsible" defaultOpen>
                     <div className="bracket-heading">
                       <h2>阶梯税额明细</h2>
                       <CollapsibleTrigger className="bracket-toggle">
