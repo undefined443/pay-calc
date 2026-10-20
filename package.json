@@ -1,0 +1,42 @@
+{
+  "name": "pay-calc",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "biome lint --error-on-warnings .",
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.mjs",
+    "fetch:policies": "node scripts/fetch-city-policies.mts",
+    "format": "biome format --write .",
+    "check": "biome check --error-on-warnings .",
+    "check:fix": "biome check --write --error-on-warnings .",
+    "prepare": "husky",
+    "lint:staged": "lint-staged"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.15",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "husky": "9.1.7",
+    "lint-staged": "17.6.0",
+    "prettier": "3.9.10",
+    "typescript": "~7.0.2",
+    "vite": "^8.3.4"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,json,jsonc,css,html,svg}": "biome check --write --error-on-warnings --no-errors-on-unmatched",
+    "*.md": "prettier --write --prose-wrap never"
+  },
+  "allowScripts": {
+    "fsevents": false
+  }
+}

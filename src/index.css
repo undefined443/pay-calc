@@ -1,0 +1,91 @@
+:root {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+  color: #213b30;
+  background: #f5f7f3;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --green: #246849;
+  --muted: #748279;
+  --border: #e1e8df;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+button,
+input,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+select,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+summary {
+  cursor: pointer;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+summary:focus-visible {
+  outline: 3px solid #87b69b;
+  outline-offset: 3px;
+}
+a {
+  color: var(--green);
+}
+button {
+  color: var(--green);
+}
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+h2 {
+  font-size: 18px;
+  font-weight: 650;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 650;
+}
+p {
+  line-height: 1.8;
+}
+button {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: white;
+  padding: 8px 12px;
+}
+button:hover {
+  background: #edf4ed;
+}
+input,
+select {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d4dfd5;
+  border-radius: 8px;
+  background: white;
+  padding: 12px;
+  color: #20392b;
+}
+input {
+  padding-right: 48px;
+  font-variant-numeric: tabular-nums;
+}
+input:focus,
+select:focus {
+  border-color: var(--green);
+}
