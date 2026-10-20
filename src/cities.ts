@@ -274,6 +274,8 @@ export interface CitySettings {
   supplement: string
   medicalTier: string
   newEmployee: boolean
+  baseOverrides: Record<string, string>
+  rateOverrides: Record<string, string>
 }
 export const INITIAL_CITY_SETTINGS: CitySettings = {
   wage: '',
@@ -282,6 +284,8 @@ export const INITIAL_CITY_SETTINGS: CitySettings = {
   supplement: '0',
   medicalTier: '1',
   newEmployee: false,
+  baseOverrides: {},
+  rateOverrides: {},
 }
 
 /** Estimate a constant month using per-branch bounds; do not imply historical annual settlement. */
@@ -292,36 +296,57 @@ export function calculateContributions(
   settings: CitySettings,
 ) {
   const rows = city.rules.map((rule) => {
-    const base = Math.min(rule.max, Math.max(rule.min, wage))
-    const rate =
+    const key = `${city.id}:${rule.name}`
+    const suggestedBase = Math.min(rule.max, Math.max(rule.min, wage))
+    const base = Number(settings.baseOverrides[key] ?? suggestedBase)
+    const suggestedRate =
       city.id === 'shenzhen' && rule.name === '医疗保险' && settings.medicalTier === '2'
         ? 0.5
         : rule.rate
+    const rate = Number(settings.rateOverrides[key] ?? suggestedRate)
     return {
       name: rule.name,
       base,
       rate,
       fixed: rule.fixed ?? 0,
+      baseMin: rule.min,
+      baseMax: rule.max,
+      rateMin: 0,
+      rateMax: 100,
       amount: money((base * rate) / 100 + (rule.fixed ?? 0)),
     }
   })
   const floor = city.id === 'shenzhen' && settings.newEmployee ? 2700 : city.fund.min
-  const base = Math.min(city.fund.max, Math.max(floor, fundWage))
+  const fundKey = `${city.id}:住房公积金`
+  const suggestedFundBase = Math.min(city.fund.max, Math.max(floor, fundWage))
+  const base = Number(settings.baseOverrides[fundKey] ?? suggestedFundBase)
+  const fundRate = Number(settings.rateOverrides[fundKey] ?? settings.fundRate)
   // Provident fund estimates round each personal monthly contribution to whole yuan.
   rows.push({
     name: '住房公积金',
     base,
-    rate: Number(settings.fundRate),
+    rate: fundRate,
     fixed: 0,
-    amount: Math.round((base * Number(settings.fundRate)) / 100),
+    baseMin: floor,
+    baseMax: city.fund.max,
+    rateMin: 5,
+    rateMax: city.fund.maxRate,
+    amount: Math.round((base * fundRate) / 100),
   })
-  if (city.id === 'shanghai' && Number(settings.supplement) > 0) {
+  if (city.id === 'shanghai') {
+    const supplementKey = `${city.id}:补充公积金`
+    const supplementRate = Number(settings.rateOverrides[supplementKey] ?? settings.supplement)
+    const supplementBase = Number(settings.baseOverrides[supplementKey] ?? base)
     rows.push({
       name: '补充公积金',
-      base,
-      rate: Number(settings.supplement),
+      base: supplementBase,
+      rate: supplementRate,
       fixed: 0,
-      amount: Math.round((base * Number(settings.supplement)) / 100),
+      baseMin: floor,
+      baseMax: city.fund.max,
+      rateMin: 0,
+      rateMax: 5,
+      amount: Math.round((supplementBase * supplementRate) / 100),
     })
   }
   const monthly = money(rows.reduce((total, row) => total + row.amount, 0))

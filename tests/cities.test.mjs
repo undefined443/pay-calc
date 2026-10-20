@@ -57,6 +57,16 @@ test('reported fund wages are independent of social insurance wages', () => {
   assert.equal(result.rows[3].base, 20000)
   assert.equal(result.rows[3].amount, 1400)
 })
+test('table overrides update individual contribution bases and rates', () => {
+  const result = estimate('beijing', 43000, {
+    baseOverrides: { 'beijing:养老保险': '10000' },
+    rateOverrides: { 'beijing:养老保险': '9' },
+  })
+  assert.equal(result.rows[0].base, 10000)
+  assert.equal(result.rows[0].rate, 9)
+  assert.equal(result.rows[0].amount, 900)
+  assert.equal(result.rows[1].base, 36348)
+})
 test('switching cities affects annual tax and net income without changing gross income', () => {
   const input = { gross: 774000, bonus: 86000, additional: 18000, other: 0 }
   const results = CITIES.map((item) =>

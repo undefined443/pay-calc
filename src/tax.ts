@@ -34,6 +34,34 @@ export function taxFor(amount: number, bonus = false) {
   }
 }
 
+/** Break annual taxable income into marginal tax brackets. */
+export function calculateBracketBreakdown(amount: number) {
+  let lower = 0
+  const rows = BRACKETS.flatMap((bracket) => {
+    const start = lower
+    const upper = Math.min(amount, bracket.limit)
+    const income = money(Math.max(0, upper - lower))
+    lower = bracket.limit
+    return income > 0
+      ? [
+          {
+            lower: start,
+            upper: bracket.limit,
+            rate: bracket.rate,
+            income,
+            tax: money(income * bracket.rate),
+          },
+        ]
+      : []
+  })
+  const lastRow = rows.at(-1)
+  if (lastRow) {
+    const rowTax = money(rows.reduce((total, row) => total + row.tax, 0))
+    lastRow.tax = money(lastRow.tax + taxFor(amount).tax - rowTax)
+  }
+  return rows
+}
+
 /** Calculate either bonus treatment without changing the total gross income. */
 export function calculateTax(input: TaxInput, separate: boolean) {
   const comprehensive = money(input.gross - (separate ? input.bonus : 0))

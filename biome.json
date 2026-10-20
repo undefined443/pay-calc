@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/dist", "!**/node_modules", "!**/package-lock.json"]
+    "includes": ["**", "!**/dist", "!**/node_modules", "!**/.vercel", "!**/package-lock.json"]
   },
   "formatter": {
     "enabled": true,
@@ -18,6 +18,11 @@
     "formatter": {
       "quoteStyle": "single",
       "semicolons": "asNeeded"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   },
   "linter": {

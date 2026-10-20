@@ -1,7 +1,7 @@
 /** Verify annual settlement examples and discontinuities in bonus tax. */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { BRACKETS, calculateTax, taxFor } from '../src/tax.ts'
+import { BRACKETS, calculateBracketBreakdown, calculateTax, money, taxFor } from '../src/tax.ts'
 
 const example = { gross: 774000, bonus: 86000, contributions: 78334.2, additional: 18000, other: 0 }
 
@@ -20,6 +20,22 @@ test('merging the bonus preserves gross income and avoids double taxation', () =
   assert.equal(result.totalTax, 132379.74)
   assert.equal(result.bonus.tax, 0)
   assert.equal(result.net, 563286.06)
+})
+
+test('bracket breakdown reports marginal income and tax that sum to annual tax', () => {
+  const rows = calculateBracketBreakdown(531665.8)
+  assert.deepEqual(
+    rows.map(({ rate, income, tax }) => ({ rate, income, tax })),
+    [
+      { rate: 0.03, income: 36000, tax: 1080 },
+      { rate: 0.1, income: 108000, tax: 10800 },
+      { rate: 0.2, income: 156000, tax: 31200 },
+      { rate: 0.25, income: 120000, tax: 30000 },
+      { rate: 0.3, income: 111665.8, tax: 33499.74 },
+    ],
+  )
+  assert.equal(money(rows.reduce((total, row) => total + row.tax, 0)), taxFor(531665.8).tax)
+  assert.deepEqual(calculateBracketBreakdown(0), [])
 })
 test('all annual brackets are continuous at their boundaries', () => {
   for (const row of BRACKETS.slice(0, -1)) {
