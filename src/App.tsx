@@ -89,7 +89,7 @@ function App() {
   const [values, setValues] = useState(INITIAL)
   const [mode, setMode] = useState('monthly')
   const [separate, setSeparate] = useState(true)
-  const [cityId, setCityId] = useState('manual')
+  const [cityId, setCityId] = useState('shanghai')
   const [citySettings, setCitySettings] = useState(INITIAL_CITY_SETTINGS)
   const [rentMonths, setRentMonths] = useState('12')
   const city = CITIES.find((item) => item.id === cityId)
