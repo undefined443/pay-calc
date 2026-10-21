@@ -119,7 +119,8 @@ function App() {
     (mode === 'monthly' ? Number(values.salary) * Number(values.months) : Number(values.annual)) +
       Number(values.bonus),
   )
-  const referenceWage = mode === 'monthly' ? Number(values.salary) : Number(values.annual) / 12
+  // The prior-year average wage follows total wages, so it includes the year-end bonus.
+  const referenceWage = gross / 12
   const cityEstimate = city
     ? calculateContributions(
         city,
