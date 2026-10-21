@@ -48,7 +48,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts,json,jsonc,css,html,svg}": "biome check --write --error-on-warnings --no-errors-on-unmatched",
-    "*.md": "prettier --write --prose-wrap never"
+    "*.md": "prettier --write --prose-wrap never",
+    "*.{yml,yaml}": "prettier --write"
   },
   "allowScripts": {
     "fsevents": false
