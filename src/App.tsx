@@ -549,8 +549,7 @@ function App() {
                                 <strong>年终奖税额</strong>
                                 <small>
                                   {formatCompact(input.bonus)} × {percentCompact(result.bonus.rate)}{' '}
-                                  − ({formatCompact(BRACKETS[bonusBracketIndex]?.deduction ?? 0)} ÷
-                                  12)
+                                  − {formatCompact(result.bonus.deduction)}
                                 </small>
                               </div>
                               <strong className="bracket-bonus-amount">
